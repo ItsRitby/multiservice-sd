@@ -74,8 +74,8 @@ public class NfsCsvService {
                 index.getTotalPages(),
                 index.getTotalLines(),
                 pageNumber + 1 < index.getTotalPages(),
-                persons,
-                Messages.FIXED_MESSAGE);
+                Messages.FIXED_MESSAGE,
+                persons);
     }
 
     public PersonDTO findById(int id) {
@@ -95,7 +95,8 @@ public class NfsCsvService {
         }
         if (candidatePage >= 0) {
             PersonDTO found = findInPage(index.getOffsets()[candidatePage], id);
-            if (found != null) return found;
+            if (found != null)
+                return found;
         }
         throw new PersonNotFoundException(id);
     }
@@ -119,7 +120,8 @@ public class NfsCsvService {
 
     private synchronized void checkForChanges() throws IOException {
         Path path = Path.of(csvPath);
-        if (!Files.exists(path)) return;
+        if (!Files.exists(path))
+            return;
         long currentMod = Files.getLastModifiedTime(path).toMillis();
         CsvIndex index = indexRef.get();
         if (index == null || currentMod > index.getCsvLastModified()) {
@@ -146,13 +148,14 @@ public class NfsCsvService {
     private List<PersonDTO> readLines(long startOffset, int count) {
         List<PersonDTO> result = new ArrayList<>(count);
         try (FileChannel channel = FileChannel.open(Path.of(csvPath), StandardOpenOption.READ);
-             BufferedReader reader = new BufferedReader(
-                     new InputStreamReader(Channels.newInputStream(channel), StandardCharsets.UTF_8))) {
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(Channels.newInputStream(channel), StandardCharsets.UTF_8))) {
             channel.position(startOffset);
             String line;
             while (result.size() < count && (line = reader.readLine()) != null) {
                 PersonDTO dto = parseLine(line);
-                if (dto != null) result.add(dto);
+                if (dto != null)
+                    result.add(dto);
             }
         } catch (IOException e) {
             throw new CsvReadException("Failed to read CSV page: " + e.getMessage());
@@ -162,8 +165,8 @@ public class NfsCsvService {
 
     private int readFirstId(long offset) {
         try (FileChannel channel = FileChannel.open(Path.of(csvPath), StandardOpenOption.READ);
-             BufferedReader reader = new BufferedReader(
-                     new InputStreamReader(Channels.newInputStream(channel), StandardCharsets.UTF_8))) {
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(Channels.newInputStream(channel), StandardCharsets.UTF_8))) {
             channel.position(offset);
             String line = reader.readLine();
             if (line == null || line.isEmpty()) {
@@ -181,15 +184,16 @@ public class NfsCsvService {
 
     private PersonDTO findInPage(long offset, int id) {
         try (FileChannel channel = FileChannel.open(Path.of(csvPath), StandardOpenOption.READ);
-             BufferedReader reader = new BufferedReader(
-                     new InputStreamReader(Channels.newInputStream(channel), StandardCharsets.UTF_8))) {
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(Channels.newInputStream(channel), StandardCharsets.UTF_8))) {
             channel.position(offset);
             String line;
             int seen = 0;
             while (seen < pageSize && (line = reader.readLine()) != null) {
                 seen++;
                 PersonDTO dto = parseLine(line);
-                if (dto != null && dto.id() == id) return dto;
+                if (dto != null && dto.id() == id)
+                    return dto;
             }
         } catch (IOException e) {
             throw new CsvReadException("Failed to search in CSV page: " + e.getMessage());
@@ -198,9 +202,11 @@ public class NfsCsvService {
     }
 
     private PersonDTO parseLine(String line) {
-        if (line == null || line.isEmpty()) return null;
+        if (line == null || line.isEmpty())
+            return null;
         String[] parts = line.split(",", 5);
-        if (parts.length < 5) return null;
+        if (parts.length < 5)
+            return null;
         try {
             int id = Integer.parseInt(parts[0].trim());
             return new PersonDTO(id, parts[1], parts[2], parts[3], parts[4]);

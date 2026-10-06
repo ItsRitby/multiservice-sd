@@ -6,7 +6,7 @@ package co.edu.uptc.sd.multiservice.util;
  */
 public final class Messages {
 
-    public static final String FIXED_MESSAGE = "Hola, este es un valor quemado";
+    public static final String FIXED_MESSAGE = "Hola, soy Jhon Sebastián Cárdenas Fonseca";
 
     private Messages() {
     }

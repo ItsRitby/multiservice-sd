@@ -43,9 +43,9 @@ public class CalculatorService {
         return new CalculatorResponseDTO(
                 nodeIdentifier.getVmHostname(),
                 nodeIdentifier.getContainerName(),
+                Messages.FIXED_MESSAGE,
                 operation,
-                num1, num2, result,
-                Messages.FIXED_MESSAGE);
+                num1, num2, result);
     }
 
     private double divide(double num1, double num2) {

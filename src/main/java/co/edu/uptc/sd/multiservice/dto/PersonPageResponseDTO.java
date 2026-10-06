@@ -10,6 +10,6 @@ public record PersonPageResponseDTO(
         int totalPages,
         long totalRecords,
         boolean hasNext,
-        List<PersonDTO> persons,
-        String message) {
+        String message,
+        List<PersonDTO> persons) {
 }

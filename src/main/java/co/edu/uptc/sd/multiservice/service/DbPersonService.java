@@ -61,8 +61,8 @@ public class DbPersonService {
                 totalPages,
                 total,
                 hasNext,
-                persons,
-                Messages.FIXED_MESSAGE);
+                Messages.FIXED_MESSAGE,
+                persons);
     }
 
     public PersonResponseDTO findById(int id) {
