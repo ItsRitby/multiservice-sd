@@ -96,8 +96,8 @@ Every response is JSON and carries the node identity that answered the request:
   "totalPages": 100000,
   "totalRecords": 10000000,
   "hasNext": true,
-  "persons": [ ... ],
-  "message": "Hola, este es un valor quemado"
+  "message": "Hola, este es un valor quemado",
+  "persons": [ ... ]
 }
 ```
 
