@@ -1,0 +1,80 @@
+services:
+
+  webservice-1:
+    build: .
+    image: multiservice:latest
+    container_name: webservice-1
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    environment:
+      VM_HOSTNAME: ${VM_HOSTNAME}
+      CONTAINER_NAME: webservice-1
+      CSV_PATH: /data/people.csv
+      PAGE_SIZE: 100
+      DB_PAGE_SIZE: 100
+      DB_URL: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - /mnt/nfs:/data:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/api/calculator?num1=1&num2=1&op=add"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 300s
+
+  webservice-2:
+    image: multiservice:latest
+    container_name: webservice-2
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    environment:
+      VM_HOSTNAME: ${VM_HOSTNAME}
+      CONTAINER_NAME: webservice-2
+      CSV_PATH: /data/people.csv
+      PAGE_SIZE: 100
+      DB_PAGE_SIZE: 100
+      DB_URL: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - /mnt/nfs:/data:ro
+    depends_on:
+      webservice-1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/api/calculator?num1=1&num2=1&op=add"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 300s
+
+  webservice-3:
+    image: multiservice:latest
+    container_name: webservice-3
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    environment:
+      VM_HOSTNAME: ${VM_HOSTNAME}
+      CONTAINER_NAME: webservice-3
+      CSV_PATH: /data/people.csv
+      PAGE_SIZE: 100
+      DB_PAGE_SIZE: 100
+      DB_URL: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - /mnt/nfs:/data:ro
+    depends_on:
+      webservice-2:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/api/calculator?num1=1&num2=1&op=add"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 300s
