@@ -6,7 +6,7 @@ package co.edu.uptc.sd.multiservice.util;
  */
 public final class Messages {
 
-    public static final String FIXED_MESSAGE = "Hola, este mensaje ya es distinto";
+    public static final String FIXED_MESSAGE = "06 de octubre";
 
     private Messages() {
     }
